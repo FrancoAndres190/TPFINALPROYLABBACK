@@ -1,0 +1,55 @@
+package com.gymapp.gym.security;
+
+import com.gymapp.gym.persistence.entities.Usr;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
+
+@AllArgsConstructor
+public class UserDetailImpl implements UserDetails {
+
+    private final Usr usr;
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getPassword() {
+        return usr.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return usr.getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public String getFirstName(){
+        return usr.getFirstName();
+    }
+}
