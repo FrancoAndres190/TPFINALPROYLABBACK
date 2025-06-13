@@ -2,49 +2,42 @@ package com.gymapp.gym.persistence.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-
-@Entity
 @Data
-public class Cls {
-
-    //Attributes
+@Entity
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long classID;
+    private Long roleID;
 
     private String name;
 
-    private String timec;
+    //@ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+    //private Set<Usr> users = new HashSet<>();
 
-    private Boolean dispo;
+    /* @OneToMany(mappedBy = "role")
+    private Set<Usr> users;
 
-    private String descrip;
-
-    @ManyToMany(mappedBy = "classes", fetch = FetchType.EAGER)
-    private Set<Usr> users = new HashSet<>();
+     */
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Cls cls = (Cls) o;
+        Role role = (Role) o;
 
-        return Objects.equals(classID, cls.classID);
+        return Objects.equals(roleID, role.roleID);
     }
-
 
     @Override
     public int hashCode() {
-        return Objects.hash(classID);
+        return Objects.hash(roleID);
     }
 
 }

@@ -1,65 +1,44 @@
 package com.gymapp.gym.persistence.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
+@Data
 @Entity
 public class MemberType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
-    @Column
+    private Integer memberTypeID;
+
     private String name;
-    @Column
+
     private Integer price;
-    @Column
+
     private Integer daysof;
-    @Column
+
     private String descipt;
 
-    //Una membresia para muchos usuarios
-    @OneToMany(mappedBy = "memberType", cascade = CascadeType.ALL)
-    private List<Usr> usrs;
+    @OneToMany(mappedBy = "memberType", fetch = FetchType.EAGER)
+    private Set<Usr> users;
 
-    public Integer getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MemberType memberType = (MemberType) o;
+
+        return Objects.equals(memberTypeID, memberType.memberTypeID);
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public int hashCode() {
+        return Objects.hash(memberTypeID);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public Integer getDaysof() {
-        return daysof;
-    }
-
-    public void setDaysof(Integer daysof) {
-        this.daysof = daysof;
-    }
-
-    public String getDescipt() {
-        return descipt;
-    }
-
-    public void setDescipt(String descipt) {
-        this.descipt = descipt;
-    }
 }

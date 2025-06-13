@@ -1,4 +1,4 @@
-package com.gymapp.gym.security;
+package com.gymapp.gym.security.Impl;
 
 import com.gymapp.gym.persistence.entities.Usr;
 import com.gymapp.gym.persistence.repository.UsrRepository;
@@ -17,9 +17,13 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usr usuario = usrRepository
+
+        Usr usr = usrRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("El usuario con email " + email + " no existe"));
-        return new UserDetailImpl(usuario);
+                .orElseThrow(() -> new UsernameNotFoundException
+                        ("El usuario con email " + email + " no existe"));
+
+        return new UserDetailImpl(usr);
+
     }
 }

@@ -1,40 +1,50 @@
 package com.gymapp.gym.security;
 
+import com.gymapp.gym.service.UsrService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import javax.xml.crypto.Data;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
+@Component
 public class TokenUtils {
 
-    private final static String ACCESS_TOKEN_SECRET = "4qhq8LrEBfYcaRHxhdb9zURb2rf8e7Ud";
-    private final static Long ACCESS_TOKEN_VALIDITY_SECONDS = 2_592_000L;
+    @Autowired
+    UsrService usrService;
 
-    public static String createToken(String nombre, String email){
+    @Value("${jwt.secret.key}")
+    private String ACCESS_TOKEN_SECRET;
+    @Value("${jwt.time.expiration}")
+    private Long ACCESS_TOKEN_VALIDITY_MILISECONDS;
 
-        long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1_000;
-        Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
+    public String createToken(String nombre, String email, Set<GrantedAuthority> authorities){
 
-        Map<String, Object> extra = new HashMap<>();
-        extra.put("nombre", nombre);
+        Date expirationDate = new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_MILISECONDS);
+
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("nombre", nombre);
+        claims.put("roles", authorities.stream()
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
 
         return Jwts.builder()
                 .setSubject(email)
                 .setExpiration(expirationDate)
-                .addClaims(extra)
+                .addClaims(claims)
                 .signWith((Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes())))
                 .compact();
 
     }
 
-    public static UsernamePasswordAuthenticationToken getAuthentication(String token) {
+    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
 
         try {
             Claims claims = Jwts.parserBuilder()
@@ -45,11 +55,18 @@ public class TokenUtils {
 
             String email = claims.getSubject();
 
-            return new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+            List<String> roles = claims.get("roles", List.class);
+
+            return new UsernamePasswordAuthenticationToken
+                    (email, null, roles.stream().map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toList()));
+
         }catch (JwtException e) {
+            System.out.println(e.getMessage());
             return null;
         }
 
-
     }
+    
+
 }

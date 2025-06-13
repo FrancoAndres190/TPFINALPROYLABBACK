@@ -1,22 +1,22 @@
-package com.gymapp.gym.security;
-
+package com.gymapp.gym.security.Impl;
 import com.gymapp.gym.persistence.entities.Usr;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
-import java.util.Collections;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class UserDetailImpl implements UserDetails {
 
     private final Usr usr;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return usr.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .collect(Collectors.toSet());
     }
 
     @Override
