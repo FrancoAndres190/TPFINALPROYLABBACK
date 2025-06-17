@@ -31,9 +31,9 @@ public class UsrService {
     ModelMapper modelMapper;
 
 
-    public void crearUsrPorDefecto() {
-            System.out.println(new BCryptPasswordEncoder().encode("12345"));
-    }
+//    public void crearUsrPorDefecto() {
+//            System.out.println(new BCryptPasswordEncoder().encode("12345"));
+//    }
 
 //-------INICIO-GET-------------------------------------------------
 

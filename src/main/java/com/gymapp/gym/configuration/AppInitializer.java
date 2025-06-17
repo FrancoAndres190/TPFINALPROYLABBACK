@@ -14,7 +14,8 @@ public class AppInitializer {
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
 
-        usrService.crearUsrPorDefecto();
+        //Esto se ejecuta al iniciar el proyecto
+
     }
 
 }

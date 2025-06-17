@@ -25,16 +25,20 @@ public class TokenUtils {
     @Value("${jwt.time.expiration}")
     private Long ACCESS_TOKEN_VALIDITY_MILISECONDS;
 
+
+    //Metodo qe genera el token
     public String createToken(String nombre, String email, Set<GrantedAuthority> authorities){
 
+        //Duraciond del token
         Date expirationDate = new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_MILISECONDS);
 
+        //Colocamos las claims en el token
         Map<String, Object> claims = new HashMap<>();
-
         claims.put("nombre", nombre);
         claims.put("roles", authorities.stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
 
+        //Devolvemos el token
         return Jwts.builder()
                 .setSubject(email)
                 .setExpiration(expirationDate)
@@ -44,19 +48,25 @@ public class TokenUtils {
 
     }
 
+    //Metodo para corroborar el token
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
 
         try {
+
+            //Obtenemos las claims
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(ACCESS_TOKEN_SECRET.getBytes())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
 
+            //Obtenemos el email
             String email = claims.getSubject();
 
+            //Obtenemos los roles
             List<String> roles = claims.get("roles", List.class);
 
+            //Devolvemos...
             return new UsernamePasswordAuthenticationToken
                     (email, null, roles.stream().map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList()));

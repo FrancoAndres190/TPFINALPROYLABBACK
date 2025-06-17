@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -31,9 +32,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         AuthCredentials authCredentials = new AuthCredentials();
 
         try{
+
+            String body = request.getReader().lines().collect(Collectors.joining());
+            System.out.println("Body recibido desde React: " + body);
+
             authCredentials = new ObjectMapper().readValue(
                     request.getReader(),
                     AuthCredentials.class);
+
+            System.out.println(" Email: " + authCredentials.getEmail());
+            System.out.println(" Password: " + authCredentials.getPassword());
 
         }catch (IOException e) {
             System.out.println("Error al leer authCredential - attemptAuthentication");

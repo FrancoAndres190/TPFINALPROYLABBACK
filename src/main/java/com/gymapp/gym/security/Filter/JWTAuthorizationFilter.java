@@ -22,10 +22,16 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        //Obtenemos la autorizacion del header
         String bearerToken = request.getHeader("Authorization");
 
+        //Verificamos que no sea nulo y que empiece con 'Bearer'
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+
+            //Dejamos solo el token
             String token = bearerToken.replace("Bearer ", "");
+
+            //Pedimos la informacion del token
             UsernamePasswordAuthenticationToken usernamePAT = tokenUtils.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(usernamePAT);
         }
