@@ -19,5 +19,13 @@ public class pubUsrController {
         return ResponseEntity.ok(usrService.createUser(createUsrDto));
 
     }
+    @GetMapping()
+    public ResponseEntity<String> pruebaAPI(){
+
+        return ResponseEntity.ok("OK!");
+
+    }
+
+
 
 }
