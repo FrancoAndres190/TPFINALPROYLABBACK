@@ -6,26 +6,28 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
-@EnableWebMvc
-public class WebConfig implements WebMvcConfigurer {
-
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {
 //        registry.addMapping("/**");
 //    }
 
+
+//registry.addMapping("/**")
+//        .allowedOrigins("http://localhost:5173")
+//        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+//        .allowedHeaders("*")
+//        .allowCredentials(true);
+
+@Configuration
+//@EnableWebMvc
+public class WebConfig implements WebMvcConfigurer {
+
+
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*");
+        registry.addMapping("/**");
     }
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:5173")
-//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-//                .allowedHeaders("*")
-//                .allowCredentials(true);
-//    }
 
     //Redirigir todas las solicitudes al index.html
     //@Override

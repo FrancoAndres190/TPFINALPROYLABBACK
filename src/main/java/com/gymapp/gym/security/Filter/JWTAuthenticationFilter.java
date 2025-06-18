@@ -33,9 +33,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         try{
 
-            String body = request.getReader().lines().collect(Collectors.joining());
-            System.out.println("Body recibido desde React: " + body);
-
             authCredentials = new ObjectMapper().readValue(
                     request.getReader(),
                     AuthCredentials.class);
