@@ -79,7 +79,7 @@ public class WebSecurityConfig {
                         "/swagger-ui/**",
                         "/swagger-ui.html"
                 ).permitAll()
-                .requestMatchers("/user/**").hasRole("USER")
+                .requestMatchers("/user/**").authenticated()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/coach/**").hasRole("COACH")
                 .anyRequest()
