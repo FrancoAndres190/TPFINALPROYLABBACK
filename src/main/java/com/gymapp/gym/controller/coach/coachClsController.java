@@ -33,12 +33,14 @@ public class coachClsController {
 
     // Crear una nueva clase (asignada al coach logueado)
     @PostMapping
-    public ResponseEntity<String> createCls(@RequestBody CreateClsDTO createClsDTO) {
+    public ResponseEntity<ClassesDTO> createCls(@RequestBody CreateClsDTO createClsDTO) {
 
         Long coachId = getUserIdFromToken();
 
-        return ResponseEntity.ok(clsService.createCls(createClsDTO, coachId));
+        ClassesDTO newClassDTO = clsService.createCls(createClsDTO, coachId);
+        return ResponseEntity.ok(newClassDTO);
     }
+
 
     // Editar una clase existente
     @PutMapping

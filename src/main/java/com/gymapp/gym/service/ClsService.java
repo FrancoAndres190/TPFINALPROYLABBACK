@@ -94,7 +94,7 @@ public class ClsService {
         Cls cls = clsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + id));
 
-        return mapClsDTO(cls); // 🚀 usar el mapper que sí agrega coachId y coachName
+        return mapClsDTO(cls);
     }
 
 
@@ -106,7 +106,7 @@ public class ClsService {
     }
 
     // Crear clase (asignada al coach)
-    public String createCls(CreateClsDTO createClsDTO, Long coachId) {
+    public ClassesDTO createCls(CreateClsDTO createClsDTO, Long coachId) {
 
         Usr coach = usrRepository.findById(coachId)
                 .orElseThrow(() -> new RuntimeException("Coach no encontrado con ID: " + coachId));
@@ -116,7 +116,7 @@ public class ClsService {
                 .toList();
 
         if (clsList.contains(createClsDTO)) {
-            return "Ya existe una clase exactamente igual.";
+            throw new RuntimeException("Ya existe una clase exactamente igual.");
         }
 
         Cls clsCreate = modelMapper.map(createClsDTO, Cls.class);
@@ -126,7 +126,8 @@ public class ClsService {
 
         clsRepository.save(clsCreate);
 
-        return "Clase " + clsCreate.getName() + " creada correctamente.";
+
+        return mapClsDTO(clsCreate);
     }
 
     // Editar clase
