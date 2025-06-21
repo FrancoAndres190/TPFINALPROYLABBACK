@@ -19,6 +19,9 @@ public class UserDetailImpl implements UserDetails {
                 .collect(Collectors.toSet());
     }
 
+    //Mandamos el ID por claims
+    public Long getUserID() { return usr.getUserID(); }
+
     @Override
     public String getPassword() {
         return usr.getPassword();
