@@ -3,6 +3,8 @@ import com.gymapp.gym.persistence.dtos.Usr.AddRoleDTO;
 import com.gymapp.gym.persistence.dtos.Usr.AddMemberDTO;
 import com.gymapp.gym.persistence.dtos.Usr.EditUsrDTO;
 import com.gymapp.gym.persistence.dtos.Usr.GetUsrDTO;
+import com.gymapp.gym.persistence.entities.Role;
+import com.gymapp.gym.service.RolService;
 import com.gymapp.gym.service.UsrService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,15 @@ public class adminUsrController {
     @Autowired
     UsrService usrService;
 
+    @Autowired
+    RolService rolService;
+
+    /*AGREGAR:
+
+        GET ALL ROLES /ADMIN/USERS/ROLES
+
+    */
+
 //-------INICIO-GET-------------------------------------------------
 
     //Metodo para obtener todos los usuarios
@@ -27,6 +38,11 @@ public class adminUsrController {
 
         return ResponseEntity.ok(usrService.getAll());
 
+    }
+
+    @GetMapping("/roles")
+    public List<Role> getAllRoles(){
+        return rolService.getAll();
     }
 
     //Metodo para obtener un usuario por id
@@ -73,6 +89,8 @@ public class adminUsrController {
         return ResponseEntity.ok(usrService.editUser(editUsrDTO));
 
     }
+
+
 
 
 
