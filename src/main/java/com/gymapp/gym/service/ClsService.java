@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -22,7 +23,11 @@ public class ClsService {
     ClsRepository clsRepository;
 
     @Autowired
+    UsrRepository usrRepository;
+
+    @Autowired
     ModelMapper modelMapper;
+
 
 
 
@@ -33,15 +38,25 @@ public class ClsService {
 
     }
 
-    public List<ClassesDTO> getAllDTO(){
+    public List<ClassesDTO> getAvailableClasses(Long userId) {
 
-        List<Cls> clsList = clsRepository.findAll();
+        // Obtenemos el usuario
+        Usr usr = usrRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
 
-        return clsList.stream()
+        // Todas las clases
+        List<Cls> allClasses = clsRepository.findAll();
+
+        // Clases que YA tiene el usuario
+        Set<Cls> userClasses = usr.getClasses();
+
+        // Filtramos: devolvemos solo las clases que el usuario NO tiene
+        return allClasses.stream()
+                .filter(cls -> !userClasses.contains(cls))
                 .map(this::mapClsDTO)
                 .collect(Collectors.toList());
-
     }
+
 
     public List<Cls> getAll(){
         return clsRepository.findAll();
@@ -89,11 +104,28 @@ public class ClsService {
 
     }
 
-    //Agregar verificacion para editar solo si existe
-    public void editCls(Cls cls) {clsRepository.save(cls);}
+    public void editCls(ClassesDTO classesDTO) {
 
-    //Agregar verificacion de eliminar solo si existe
-    public void deleteCls(Cls cls) {clsRepository.delete(cls);}
+        Cls existingCls = clsRepository.findById(classesDTO.getClassID())
+                .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + classesDTO.getClassID()));
+
+        // Solo actualizamos campos simples
+        existingCls.setName(classesDTO.getName());
+        existingCls.setTimec(classesDTO.getTimec());
+        existingCls.setDispo(classesDTO.getDispo());
+        existingCls.setDescrip(classesDTO.getDescrip());
+
+        clsRepository.save(existingCls);
+    }
+
+    public void deleteCls(ClassesDTO classesDTO) {
+
+        Cls existingCls = clsRepository.findById(classesDTO.getClassID())
+                .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + classesDTO.getClassID()));
+
+        clsRepository.delete(existingCls);
+    }
+
 
 
 }

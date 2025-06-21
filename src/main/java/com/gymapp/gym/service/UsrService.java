@@ -1,4 +1,5 @@
 package com.gymapp.gym.service;
+import com.gymapp.gym.persistence.dtos.Cls.ClassesDTO;
 import com.gymapp.gym.persistence.dtos.Usr.*;
 import com.gymapp.gym.persistence.entities.Cls;
 import com.gymapp.gym.persistence.entities.MemberType;
@@ -31,9 +32,41 @@ public class UsrService {
     ModelMapper modelMapper;
 
 
-//    public void crearUsrPorDefecto() {
-//            System.out.println(new BCryptPasswordEncoder().encode("12345"));
-//    }
+
+
+    //Para obtener las clases del usuario
+    public List<ClassesDTO> getMyClasses(Long userId) {
+
+        Usr usr = usrRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+
+        return usr.getClasses().stream()
+                .map(cls -> modelMapper.map(cls, ClassesDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public String leaveClass(Long userId, Long classId) {
+
+        Usr usr = usrRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+
+        Cls cls = clsRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + classId));
+
+        if (!usr.getClasses().contains(cls)) {
+            return "No estabas anotado en la clase: " + cls.getName();
+        }
+
+        // Quitamos la clase del usuario
+        usr.getClasses().remove(cls);
+        cls.getUsers().remove(usr);
+
+        usrRepository.save(usr);
+        clsRepository.save(cls);
+
+        return "Te has dado de baja de la clase: " + cls.getName();
+    }
+
 
 //-------INICIO-GET-------------------------------------------------
 
@@ -139,33 +172,29 @@ public class UsrService {
     }
 
     //Metodo para agregar una clase al usuario
-    public String addClass(AddClassDTO addClassDTO) {
+    public String joinClass(Long userId, Long classId) {
 
-        try {
+        Usr usr = usrRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
 
-            //Verificamos que existan los id
-            Usr usr = usrRepository.findById(addClassDTO.getUserID()).orElseThrow(()
-                    -> new RuntimeException("Usuario no encontrado con ID: " + addClassDTO.getUserID()));
+        Cls cls = clsRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + classId));
 
-            Cls cls = clsRepository.findById(addClassDTO.getClassID()).orElseThrow(()
-                    -> new RuntimeException("Clase no encontrada con ID: " + addClassDTO.getClassID()));
-
-            if (usr == null || cls == null){
-                return "Error al agregar a la clase";
-            }
-
-            //Agregamos la clase al usuario y el usuario a la clase
-            usr.getClasses().add(cls);
-            cls.getUsers().add(usr);
-            usrRepository.save(usr);
-            clsRepository.save(cls);
-
-            return "Te has agregado a la clase " + cls.getName();
-
-        } catch (Exception e) {
-            return "Error al agregar el usuario a la clase. Detalles:" + e.getMessage();
+        // Si ya está en la clase, no volver a agregar
+        if (usr.getClasses().contains(cls)) {
+            return "Ya estás unido a la clase: " + cls.getName();
         }
+
+        // Agregamos la clase al usuario y el usuario a la clase
+        usr.getClasses().add(cls);
+        cls.getUsers().add(usr);
+
+        usrRepository.save(usr);
+        clsRepository.save(cls);
+
+        return "Te has unido a la clase: " + cls.getName();
     }
+
 
 //-------INICIO-UPDATE-------------------------------------------------
 
