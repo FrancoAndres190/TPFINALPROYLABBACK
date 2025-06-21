@@ -6,10 +6,10 @@ import com.gymapp.gym.persistence.entities.Cls;
 import com.gymapp.gym.service.ClsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/coach/classes")
@@ -18,42 +18,45 @@ public class coachClsController {
     @Autowired
     ClsService clsService;
 
-
-    @GetMapping()
-    public ResponseEntity<List<Cls>> getAll(){
-
-        return ResponseEntity.ok(clsService.getAll());
-
+    // Obtener las clases del coach logueado
+    @GetMapping
+    public ResponseEntity<List<ClassesDTO>> getClassesByCoach() {
+        Long coachId = getUserIdFromToken();
+        return ResponseEntity.ok(clsService.getClassesByCoachDTO(coachId));
     }
 
+    // Obtener una clase por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Cls> getOneById(@RequestBody Long id){
-
+    public ResponseEntity<Cls> getOneById(@PathVariable Long id) {
         return ResponseEntity.ok(clsService.getOneById(id));
-
     }
 
-    @PostMapping()
-    public ResponseEntity<String> createCls(@RequestBody CreateClsDTO createClsDTO){
+    // Crear una nueva clase (asignada al coach logueado)
+    @PostMapping
+    public ResponseEntity<String> createCls(@RequestBody CreateClsDTO createClsDTO) {
 
-        return ResponseEntity.ok(clsService.createCls(createClsDTO));
+        Long coachId = getUserIdFromToken();
 
+        return ResponseEntity.ok(clsService.createCls(createClsDTO, coachId));
     }
 
-
-    //CORREGIR DE ACA PARA ABAJO............
-    @PutMapping()
-    public void editCls(@RequestBody ClassesDTO classesDTO) {
-
+    // Editar una clase existente
+    @PutMapping
+    public ResponseEntity<String> editCls(@RequestBody ClassesDTO classesDTO) {
         clsService.editCls(classesDTO);
+        return ResponseEntity.ok("Clase editada correctamente");
     }
 
-    @DeleteMapping()
-    public void deleteCls(@RequestBody ClassesDTO classesDTO) {
-
-        clsService.deleteCls(classesDTO);
-
+    // Eliminar una clase por ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCls(@PathVariable Long id) {
+        clsService.deleteCls(id);
+        return ResponseEntity.ok("Clase eliminada correctamente");
     }
 
+    // Obtener el userId del token JWT
+    private Long getUserIdFromToken() {
+        return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 
 }

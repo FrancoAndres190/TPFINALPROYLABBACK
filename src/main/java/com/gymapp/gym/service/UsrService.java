@@ -39,8 +39,25 @@ public class UsrService {
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado con ID: " + userId));
 
         return usr.getClasses().stream()
-                .map(cls -> modelMapper.map(cls, ClassesDTO.class))
+                .map(this::mapClsDTO)
                 .collect(Collectors.toList());
+    }
+    private ClassesDTO mapClsDTO(Cls cls) {
+
+        ClassesDTO dto = new ClassesDTO();
+
+        dto.setClassID(cls.getClassID());
+        dto.setName(cls.getName());
+        dto.setTimec(cls.getTimec());
+        dto.setDispo(cls.getDispo());
+        dto.setDescrip(cls.getDescrip());
+
+        if (cls.getCoach() != null) {
+            dto.setCoachId(cls.getCoach().getUserID());
+            dto.setCoachName(cls.getCoach().getFirstName() + " " + cls.getCoach().getLastName());
+        }
+
+        return dto;
     }
 
     // Devuelve todos los usuarios registrados

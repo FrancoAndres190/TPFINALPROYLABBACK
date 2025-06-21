@@ -31,6 +31,11 @@ public class Cls {
     @ManyToMany(mappedBy = "classes", fetch = FetchType.EAGER)
     private Set<Usr> users = new HashSet<>();
 
+    // Coach que creó la clase
+    @ManyToOne
+    @JoinColumn(name = "coach_id")
+    private Usr coach;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

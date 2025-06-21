@@ -41,6 +41,9 @@ public class Usr {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "coach")
+    private Set<Cls> clasesCreadas;
+
     /* @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

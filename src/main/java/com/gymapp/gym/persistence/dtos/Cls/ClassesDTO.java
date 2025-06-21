@@ -18,4 +18,10 @@ public class ClassesDTO {
 
     private String descrip;
 
+    private Long coachId;
+
+    private String coachName;
+
+
+
 }
