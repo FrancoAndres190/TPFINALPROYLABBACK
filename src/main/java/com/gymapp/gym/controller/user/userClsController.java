@@ -4,6 +4,7 @@ import com.gymapp.gym.persistence.dtos.Cls.ClassesDTO;
 import com.gymapp.gym.service.ClsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +21,12 @@ public class userClsController {
     @GetMapping()
     public ResponseEntity<List<ClassesDTO>> getAllDTO(){
 
-        return ResponseEntity.ok(clsService.getAllDTO());
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return ResponseEntity.ok(clsService.getAvailableClasses(userId));
 
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ClassesDTO> getOneByIdDTO(@RequestBody Long id){

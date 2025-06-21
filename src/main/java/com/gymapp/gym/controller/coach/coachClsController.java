@@ -1,5 +1,6 @@
 package com.gymapp.gym.controller.coach;
 
+import com.gymapp.gym.persistence.dtos.Cls.ClassesDTO;
 import com.gymapp.gym.persistence.dtos.Cls.CreateClsDTO;
 import com.gymapp.gym.persistence.entities.Cls;
 import com.gymapp.gym.service.ClsService;
@@ -42,15 +43,15 @@ public class coachClsController {
 
     //CORREGIR DE ACA PARA ABAJO............
     @PutMapping()
-    public void editCls(@RequestBody Cls cls) {
+    public void editCls(@RequestBody ClassesDTO classesDTO) {
 
-        clsService.editCls(cls);
+        clsService.editCls(classesDTO);
     }
 
     @DeleteMapping()
-    public void deleteCls(@RequestBody Cls cls) {
+    public void deleteCls(@RequestBody ClassesDTO classesDTO) {
 
-        clsService.deleteCls(cls);
+        clsService.deleteCls(classesDTO);
 
     }
 
