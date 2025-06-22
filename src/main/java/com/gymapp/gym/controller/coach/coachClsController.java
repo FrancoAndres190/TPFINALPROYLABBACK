@@ -2,6 +2,7 @@ package com.gymapp.gym.controller.coach;
 
 import com.gymapp.gym.persistence.dtos.Cls.ClassesDTO;
 import com.gymapp.gym.persistence.dtos.Cls.CreateClsDTO;
+import com.gymapp.gym.persistence.dtos.Usr.UserSimpleDTO;
 import com.gymapp.gym.persistence.entities.Cls;
 import com.gymapp.gym.service.ClsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/coach/classes")
@@ -17,6 +20,16 @@ public class coachClsController {
 
     @Autowired
     ClsService clsService;
+
+
+    //Eliminar un usuario de la clase
+    @DeleteMapping("/userlist/{classId}/user/{userId}")
+    public ResponseEntity<String> removeUserFromClass(
+            @PathVariable Long classId,
+            @PathVariable Long userId) {
+
+        return ResponseEntity.ok(clsService.removeUserFromClass(classId, userId));
+    }
 
     // Obtener las clases del coach logueado
     @GetMapping
@@ -26,10 +39,12 @@ public class coachClsController {
     }
 
     // Obtener una clase por ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Cls> getOneById(@PathVariable Long id) {
-        return ResponseEntity.ok(clsService.getOneById(id));
+    @GetMapping("/userlist/{id}")
+    public ResponseEntity<List<UserSimpleDTO>> getUsersInClass(@PathVariable Long id) {
+
+        return ResponseEntity.ok(clsService.getListUsersInClass(id));
     }
+
 
     // Crear una nueva clase (asignada al coach logueado)
     @PostMapping

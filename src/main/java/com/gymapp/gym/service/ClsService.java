@@ -2,13 +2,16 @@ package com.gymapp.gym.service;
 
 import com.gymapp.gym.persistence.dtos.Cls.ClassesDTO;
 import com.gymapp.gym.persistence.dtos.Cls.CreateClsDTO;
+import com.gymapp.gym.persistence.dtos.Usr.UserSimpleDTO;
 import com.gymapp.gym.persistence.entities.Cls;
 import com.gymapp.gym.persistence.entities.Usr;
 import com.gymapp.gym.persistence.repository.ClsRepository;
 import com.gymapp.gym.persistence.repository.UsrRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Set;
@@ -28,6 +31,27 @@ public class ClsService {
 
     // Mapear Cls a DTO
 
+
+    public String removeUserFromClass(Long classId, Long userId) {
+
+        Cls cls = clsRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + classId));
+
+        Usr usr = usrRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+
+        if (!cls.getUsers().contains(usr)) {
+            return "El usuario no pertenece a esta clase.";
+        }
+
+        cls.getUsers().remove(usr);
+        usr.getClasses().remove(cls);
+
+        clsRepository.save(cls);
+        usrRepository.save(usr);
+
+        return "Usuario eliminado de la clase correctamente.";
+    }
 
     private ClassesDTO mapClsDTO(Cls cls) {
 
@@ -88,21 +112,18 @@ public class ClsService {
     }
 
 
-    // Obtener una clase por ID y devolver DTO
-    public ClassesDTO getOneByIdDTO(Long id) {
-
-        Cls cls = clsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + id));
-
-        return mapClsDTO(cls);
-    }
-
 
 
     // Obtener una clase por ID (entidad)
     public Cls getOneById(Long id) {
         return clsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + id));
+    }
+
+    public List<UserSimpleDTO> getListUsersInClass(Long id) {
+        return getOneById(id).getUsers().stream()
+                .map(user -> modelMapper.map(user, UserSimpleDTO.class))
+                .toList();
     }
 
     // Crear clase (asignada al coach)
