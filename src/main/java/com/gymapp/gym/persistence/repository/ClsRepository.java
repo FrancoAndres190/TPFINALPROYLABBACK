@@ -9,5 +9,9 @@ import java.util.List;
 public interface ClsRepository extends JpaRepository<Cls, Long> {
 
     List<Cls> findByCoach(Usr coach);
+    List<Cls> findByCoachOrderByCreatedAtDesc(Usr coach);
+    List<Cls> findAllByOrderByCreatedAtDesc();
+
+
 
 }

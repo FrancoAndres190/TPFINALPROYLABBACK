@@ -63,6 +63,13 @@ public class ClsService {
         dto.setDispo(cls.getDispo());
         dto.setDescrip(cls.getDescrip());
 
+        dto.setMaxCapacity(cls.getMaxCapacity());
+        dto.setDurationMinutes(cls.getDurationMinutes());
+
+        if (cls.getCreatedAt() != null) {
+            dto.setCreatedAt(cls.getCreatedAt());
+        }
+
         if (cls.getCoach() != null) {
             dto.setCoachId(cls.getCoach().getUserID());
             dto.setCoachName(cls.getCoach().getFirstName() + " " + cls.getCoach().getLastName());
@@ -70,6 +77,7 @@ public class ClsService {
 
         return dto;
     }
+
 
 
 
@@ -84,7 +92,7 @@ public class ClsService {
         Usr usr = usrRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
 
-        List<Cls> allClasses = clsRepository.findAll();
+        List<Cls> allClasses = clsRepository.findAllByOrderByCreatedAtDesc();
 
         Set<Cls> userClasses = usr.getClasses();
 
@@ -105,7 +113,7 @@ public class ClsService {
         Usr coach = usrRepository.findById(coachId)
                 .orElseThrow(() -> new RuntimeException("Coach no encontrado con ID: " + coachId));
 
-        return clsRepository.findByCoach(coach)
+        return clsRepository.findByCoachOrderByCreatedAtDesc(coach)
                 .stream()
                 .map(this::mapClsDTO)
                 .collect(Collectors.toList());
