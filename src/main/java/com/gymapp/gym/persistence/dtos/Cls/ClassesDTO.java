@@ -1,9 +1,8 @@
 package com.gymapp.gym.persistence.dtos.Cls;
-import com.gymapp.gym.persistence.entities.Usr;
-import jakarta.persistence.*;
+
 import lombok.Data;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.time.LocalDateTime;
 
 @Data
 public class ClassesDTO {
@@ -18,10 +17,14 @@ public class ClassesDTO {
 
     private String descrip;
 
+    private Integer maxCapacity;
+
+    private Integer durationMinutes;
+
+    private LocalDateTime createdAt;
+
     private Long coachId;
 
     private String coachName;
-
-
 
 }

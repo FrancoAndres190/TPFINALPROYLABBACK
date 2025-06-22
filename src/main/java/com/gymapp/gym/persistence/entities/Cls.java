@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -28,6 +29,13 @@ public class Cls {
 
     private String descrip;
 
+    private Integer maxCapacity;
+
+    private Integer durationMinutes;
+
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
     @ManyToMany(mappedBy = "classes", fetch = FetchType.EAGER)
     private Set<Usr> users = new HashSet<>();
 
@@ -46,6 +54,10 @@ public class Cls {
         return Objects.equals(classID, cls.classID);
     }
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     @Override
     public int hashCode() {
