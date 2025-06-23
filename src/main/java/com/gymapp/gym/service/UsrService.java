@@ -11,6 +11,7 @@ import com.gymapp.gym.persistence.repository.ClsRepository;
 import com.gymapp.gym.persistence.repository.MemberTypeRepository;
 import com.gymapp.gym.persistence.repository.RoleRepository;
 import com.gymapp.gym.persistence.repository.UsrRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -126,6 +127,7 @@ public class UsrService {
     }
 
     // Inscribe al usuario autenticado en una clase
+    @Transactional
     public String joinClass(Long userId, Long classId) {
 
         Usr usr = usrRepository.findById(userId)
@@ -138,14 +140,32 @@ public class UsrService {
             return "Ya estás unido a la clase: " + cls.getName();
         }
 
+        if (!Boolean.TRUE.equals(cls.getDispo())) {
+            return "La clase no está disponible para inscribirse.";
+        }
+
+        int cupoActual = cls.getUsers().size();
+        int cupoMaximo = cls.getMaxCapacity() != null ? cls.getMaxCapacity() : 0;
+
+        if (cupoActual >= cupoMaximo) {
+            return "No hay cupos disponibles para esta clase.";
+        }
+
         usr.getClasses().add(cls);
         cls.getUsers().add(usr);
+
+        if (cls.getUsers().size() >= cupoMaximo) {
+            cls.setDispo(false);
+        }
 
         usrRepository.save(usr);
         clsRepository.save(cls);
 
-        return "Te has unido a la clase: " + cls.getName();
+        // todo OK → devolvemos null
+        return null;
     }
+
+
 
     // Modifica los datos del usuario autenticado
     public String editUser(EditUsrDTO editUsrDTO) {

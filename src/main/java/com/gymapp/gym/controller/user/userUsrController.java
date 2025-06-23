@@ -4,6 +4,7 @@ import com.gymapp.gym.persistence.dtos.Cls.ClassesDTO;
 import com.gymapp.gym.persistence.dtos.Usr.*;
 import com.gymapp.gym.service.UsrService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +42,15 @@ public class userUsrController {
 
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return ResponseEntity.ok(usrService.joinClass(userId, classID));
+        String error = usrService.joinClass(userId, classID);
+
+        if (error == null) {
+            return ResponseEntity.ok("Te has unido a la clase.");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        }
     }
+
 
 
     @GetMapping("/{id}")

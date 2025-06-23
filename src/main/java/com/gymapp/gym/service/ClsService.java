@@ -7,6 +7,7 @@ import com.gymapp.gym.persistence.entities.Cls;
 import com.gymapp.gym.persistence.entities.Usr;
 import com.gymapp.gym.persistence.repository.ClsRepository;
 import com.gymapp.gym.persistence.repository.UsrRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,8 @@ public class ClsService {
     @Autowired
     ModelMapper modelMapper;
 
+
     // Mapear Cls a DTO
-
-
     public String removeUserFromClass(Long classId, Long userId) {
 
         Cls cls = clsRepository.findById(classId)
