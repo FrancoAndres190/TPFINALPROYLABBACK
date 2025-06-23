@@ -13,7 +13,7 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Maneja NotFoundException → responde 404
+    // Maneja NotFoundException > responde 404
     @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(ChangeSetPersister.NotFoundException ex) {
 
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    // Maneja error → responde 500
+    // Maneja error > responde 500
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception e) {
 

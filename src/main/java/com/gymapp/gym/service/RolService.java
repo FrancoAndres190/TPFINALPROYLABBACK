@@ -6,27 +6,52 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RolService {
+
     @Autowired
     RoleRepository roleRepository;
 
-    public List<Role> getAll(){return roleRepository.findAll();}
 
-    public Role getOneById(Long id) {return roleRepository.findById(id).orElse(null);}
+    // Metodo para obtener todos los roles
+    public List<Role> getAll() { return roleRepository.findAll(); }
 
-    //Agregar verificacion de crear si no existe uno igual
+
+    // Metodo para obtener un rol por ID
+    public Role getOneById(Long id) { return roleRepository.findById(id).orElse(null); }
+
+
+    // Metodo para crear un rol (si no existe uno igual)
     public void createRol(Role role) {
-        roleRepository.save(role);}
+        Optional<Role> existingRole = roleRepository.findByName(role.getName());
+        if (existingRole.isEmpty()) {
+            roleRepository.save(role);
+        } else {
+            throw new RuntimeException("El rol ya existe");
+        }
+    }
 
-    //Agregar verificacion para editar solo si existe
+
+    // Metodo para editar un rol (solo si existe)
     public void editRol(Role role) {
-        roleRepository.save(role);}
+        if (role.getRoleID() != null && roleRepository.existsById(role.getRoleID())) {
+            roleRepository.save(role);
+        } else {
+            throw new RuntimeException("El rol no existe");
+        }
+    }
 
-    //Agregar verificacion de eliminar solo si existe
+
+    // Metodo para eliminar un rol (solo si existe)
     public void deleteRol(Role role) {
-        roleRepository.delete(role);}
+        if (role.getRoleID() != null && roleRepository.existsById(role.getRoleID())) {
+            roleRepository.delete(role);
+        } else {
+            throw new RuntimeException("El rol no existe");
+        }
+    }
 
 
 }

@@ -10,9 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/coach/classes")
@@ -21,15 +19,7 @@ public class coachClsController {
     @Autowired
     ClsService clsService;
 
-
-    //Eliminar un usuario de la clase
-    @DeleteMapping("/userlist/{classId}/user/{userId}")
-    public ResponseEntity<String> removeUserFromClass(
-            @PathVariable Long classId,
-            @PathVariable Long userId) {
-
-        return ResponseEntity.ok(clsService.removeUserFromClass(classId, userId));
-    }
+//-------INICIO-GET-------------------------------------------------
 
     // Obtener las clases del coach logueado
     @GetMapping
@@ -41,21 +31,20 @@ public class coachClsController {
     // Obtener una clase por ID
     @GetMapping("/userlist/{id}")
     public ResponseEntity<List<UserSimpleDTO>> getUsersInClass(@PathVariable Long id) {
-
         return ResponseEntity.ok(clsService.getListUsersInClass(id));
     }
 
+//-------INICIO-POST-------------------------------------------------
 
-    // Crear una nueva clase (asignada al coach logueado)
+    // Crear una nueva clase
     @PostMapping
     public ResponseEntity<ClassesDTO> createCls(@RequestBody CreateClsDTO createClsDTO) {
-
         Long coachId = getUserIdFromToken();
-
         ClassesDTO newClassDTO = clsService.createCls(createClsDTO, coachId);
         return ResponseEntity.ok(newClassDTO);
     }
 
+//-------INICIO-UPDATE-------------------------------------------------
 
     // Editar una clase existente
     @PutMapping
@@ -64,6 +53,8 @@ public class coachClsController {
         return ResponseEntity.ok("Clase editada correctamente");
     }
 
+//-------INICIO-DELETE-------------------------------------------------
+
     // Eliminar una clase por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCls(@PathVariable Long id) {
@@ -71,7 +62,17 @@ public class coachClsController {
         return ResponseEntity.ok("Clase eliminada correctamente");
     }
 
-    // Obtener el userId del token JWT
+    // Eliminar un usuario de la clase
+    @DeleteMapping("/userlist/{classId}/user/{userId}")
+    public ResponseEntity<String> removeUserFromClass(
+            @PathVariable Long classId,
+            @PathVariable Long userId) {
+        return ResponseEntity.ok(clsService.removeUserFromClass(classId, userId));
+    }
+
+//-------UTILS-------------------------------------------------
+
+    // Obtener el userId del token
     private Long getUserIdFromToken() {
         return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }

@@ -17,14 +17,6 @@ public class Role {
 
     private String name;
 
-    //@ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    //private Set<Usr> users = new HashSet<>();
-
-    /* @OneToMany(mappedBy = "role")
-    private Set<Usr> users;
-
-     */
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

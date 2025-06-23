@@ -31,7 +31,7 @@ public class ClsService {
     ModelMapper modelMapper;
 
 
-    // Mapear Cls a DTO
+   //Metodo que saca un usuario de una clase
     public String removeUserFromClass(Long classId, Long userId) {
 
         Cls cls = clsRepository.findById(classId)
@@ -53,6 +53,8 @@ public class ClsService {
         return "Usuario eliminado de la clase correctamente.";
     }
 
+
+    // Mapear Cls a ClassesDTO
     private ClassesDTO mapClsDTO(Cls cls) {
 
         ClassesDTO dto = new ClassesDTO();
@@ -79,12 +81,11 @@ public class ClsService {
     }
 
 
-
-
     // Mapear Cls a CreateClsDTO
     private CreateClsDTO mapCreateClsDTO(Cls cls) {
         return modelMapper.map(cls, CreateClsDTO.class);
     }
+
 
     // Obtener las clases que el usuario NO tiene
     public List<ClassesDTO> getAvailableClasses(Long userId) {
@@ -92,6 +93,7 @@ public class ClsService {
         Usr usr = usrRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
 
+        //Listamos por fecha descendente
         List<Cls> allClasses = clsRepository.findAllByOrderByCreatedAtDesc();
 
         Set<Cls> userClasses = usr.getClasses();
@@ -102,10 +104,12 @@ public class ClsService {
                 .collect(Collectors.toList());
     }
 
+
     // Obtener TODAS las clases (admin)
     public List<Cls> getAll() {
         return clsRepository.findAll();
     }
+
 
     // Obtener las clases de un coach
     public List<ClassesDTO> getClassesByCoachDTO(Long coachId) {
@@ -113,6 +117,7 @@ public class ClsService {
         Usr coach = usrRepository.findById(coachId)
                 .orElseThrow(() -> new RuntimeException("Coach no encontrado con ID: " + coachId));
 
+        //Devuelve las clases creadas por el coach, ordenadas por fecha descendente
         return clsRepository.findByCoachOrderByCreatedAtDesc(coach)
                 .stream()
                 .map(this::mapClsDTO)
@@ -120,21 +125,21 @@ public class ClsService {
     }
 
 
-
-
-    // Obtener una clase por ID (entidad)
+    // Metodo para obtener una clase, por classID
     public Cls getOneById(Long id) {
         return clsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + id));
     }
 
+    //Metodo para obtener la lista de usuarios en una clase
     public List<UserSimpleDTO> getListUsersInClass(Long id) {
         return getOneById(id).getUsers().stream()
                 .map(user -> modelMapper.map(user, UserSimpleDTO.class))
                 .toList();
     }
 
-    // Crear clase (asignada al coach)
+
+    // Metodo para crear clase
     public ClassesDTO createCls(CreateClsDTO createClsDTO, Long coachId) {
 
         Usr coach = usrRepository.findById(coachId)
@@ -155,16 +160,16 @@ public class ClsService {
 
         clsRepository.save(clsCreate);
 
-
         return mapClsDTO(clsCreate);
     }
 
-    // Editar clase
+    // Metodo para editar una clase
     public String editCls(ClassesDTO classesDTO) {
 
         Cls existingCls = clsRepository.findById(classesDTO.getClassID())
                 .orElseThrow(() -> new RuntimeException("Clase no encontrada con ID: " + classesDTO.getClassID()));
 
+        //No usamos mapper, porque rompia :(
         existingCls.setName(classesDTO.getName());
         existingCls.setTimec(classesDTO.getTimec());
         existingCls.setDispo(classesDTO.getDispo());
@@ -175,7 +180,7 @@ public class ClsService {
         return "Clase " + existingCls.getName() + " editada correctamente.";
     }
 
-    // Eliminar clase (por ID)
+    // Metodo para eliminar clase, con classId
     public String deleteCls(Long id) {
 
         Cls existingCls = clsRepository.findById(id)
@@ -184,9 +189,10 @@ public class ClsService {
         existingCls.getUsers().forEach(user -> user.getClasses().remove(existingCls));
         existingCls.getUsers().clear();
 
-        clsRepository.save(existingCls);  // guardar para actualizar la relación
+        // guardamos para actualizar la relacion
+        clsRepository.save(existingCls);
 
-        // Ahora sí, eliminar
+        // ahora borramos
         clsRepository.delete(existingCls);
 
         return "Clase " + existingCls.getName() + " eliminada correctamente.";

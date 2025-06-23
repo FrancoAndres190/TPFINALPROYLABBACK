@@ -31,34 +31,6 @@ public class WebSecurityConfig {
     @Autowired
     TokenUtils tokenUtils;
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .cors() // Aplica la configuración de CORS definida más abajo
-//                .and()
-//                .csrf().disable()
-//                .authorizeHttpRequests()
-//                .requestMatchers("/pub/login").permitAll()
-//                .anyRequest().authenticated();
-//
-//
-//        return http.build();
-//    }
-
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowedOrigins(List.of("http://localhost:5173")); // o el origen de tu frontend
-//        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        config.setAllowedHeaders(List.of("*"));
-//        config.setAllowCredentials(true);
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", config); // Aplica a toda la API
-//
-//        return new CorsFilter(source);
-//    }
-
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();

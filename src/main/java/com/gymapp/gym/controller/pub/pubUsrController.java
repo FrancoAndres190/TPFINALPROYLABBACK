@@ -13,19 +13,14 @@ public class pubUsrController {
     @Autowired
     UsrService usrService;
 
+//-------INICIO-POST-------------------------------------------------
+
+    //Metodo para crear usuario
     @PostMapping()
     public ResponseEntity<String> createUser(@RequestBody CreateUsrDTO createUsrDto){
 
         return ResponseEntity.ok(usrService.createUser(createUsrDto));
 
     }
-    @GetMapping()
-    public ResponseEntity<String> pruebaAPI(){
-
-        return ResponseEntity.ok("OK!");
-
-    }
-
-
 
 }

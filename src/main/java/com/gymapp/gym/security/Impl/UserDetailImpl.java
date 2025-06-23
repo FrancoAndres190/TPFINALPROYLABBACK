@@ -34,7 +34,6 @@ public class UserDetailImpl implements UserDetails {
 
     public boolean isMembershipActive(){return  usr.isMembershipActive();}
 
-
     @Override
     public boolean isAccountNonExpired() {
         return true;

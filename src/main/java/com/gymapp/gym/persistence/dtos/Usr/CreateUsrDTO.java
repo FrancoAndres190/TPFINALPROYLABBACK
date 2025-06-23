@@ -78,7 +78,4 @@ public class CreateUsrDTO {
     }
 
 
-    /*(ROL DEFECTO, USER)
-    private MemberType memberType;*/
-
 }

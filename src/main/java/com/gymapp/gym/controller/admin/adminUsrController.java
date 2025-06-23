@@ -32,6 +32,7 @@ public class adminUsrController {
 
     }
 
+    //Metodo para obtener todos los roles
     @GetMapping("/roles")
     public List<Role> getAllRoles(){
         return rolService.getAll();

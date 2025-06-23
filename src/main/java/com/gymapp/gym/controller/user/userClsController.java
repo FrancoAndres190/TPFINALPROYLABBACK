@@ -17,49 +17,33 @@ public class userClsController {
     ClsService clsService;
 
 
+//-------INICIO-GET-------------------------------------------------
 
-    // Obtener las clases disponibles para el usuario (las que NO tiene)
-    /*@GetMapping
-    public ResponseEntity<List<ClassesDTO>> getAvailableClasses() {
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("Principal recibido: " + principal + " (type: " + principal.getClass() + ")");
-
-
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-
-        return ResponseEntity.ok(clsService.getAvailableClasses(userId));
-    } */
-
+    //Metodo que devuelve todas las clases (Saca las que ya estas anotado)
     @GetMapping
     public ResponseEntity<?> getAvailableClasses() {
 
         try {
-            // Obtener el principal (userId)
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            System.out.println("Principal recibido: " + principal + " (type: " + principal.getClass() + ")");
 
-            // Intentar parsear a Long
+            Object principal = getUserIdFromToken();
             Long userId = (Long) principal;
-            System.out.println("UserId como Long: " + userId);
-
-            // Llamamos al service
             List<ClassesDTO> availableClasses = clsService.getAvailableClasses(userId);
 
-            // Devolvemos la respuesta
             return ResponseEntity.ok(availableClasses);
 
         } catch (Exception e) {
-            // Mostramos el error en consola
-            System.out.println("ERROR en getAvailableClasses: " + e.getMessage());
-            e.printStackTrace();
 
-            // Devolvemos error 500 con el mensaje
             return ResponseEntity.status(500).body("Error interno: " + e.getMessage());
         }
     }
 
+
+//-------UTILS-------------------------------------------------
+
+    // Obtener el userId del token
+    private Long getUserIdFromToken() {
+        return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 
 
 }

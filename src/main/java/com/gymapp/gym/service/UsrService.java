@@ -34,6 +34,7 @@ public class UsrService {
     @Autowired
     ModelMapper modelMapper;
 
+
     // Devuelve las clases del usuario autenticado
     public List<ClassesDTO> getMyClasses(Long userId) {
         Usr usr = usrRepository.findById(userId)
@@ -43,6 +44,9 @@ public class UsrService {
                 .map(this::mapClsDTO)
                 .collect(Collectors.toList());
     }
+
+
+    //Mapea Cls a ClassesDTO
     private ClassesDTO mapClsDTO(Cls cls) {
 
         ClassesDTO dto = new ClassesDTO();
@@ -61,6 +65,7 @@ public class UsrService {
         return dto;
     }
 
+
     // Devuelve todos los usuarios registrados
     public List<GetUsrDTO> getAll() {
         List<Usr> usrList = usrRepository.findAll();
@@ -70,6 +75,7 @@ public class UsrService {
                 .collect(Collectors.toList());
     }
 
+
     // Devuelve un usuario por su ID
     public GetUsrDTO getOneById(Long id) {
         Usr usrById = usrRepository.findById(id)
@@ -77,6 +83,7 @@ public class UsrService {
 
         return modelMapper.map(usrById, GetUsrDTO.class);
     }
+
 
     // Crea un nuevo usuario
     public String createUser(CreateUsrDTO createUsrDto) {
@@ -91,6 +98,7 @@ public class UsrService {
         usrRepository.save(usrCreate);
         return "Creado correctamente";
     }
+
 
     // Agrega un rol a un usuario
     public String addRole(AddRoleDTO addRoleDTO) {
@@ -111,6 +119,7 @@ public class UsrService {
         return "Usuario: " + usr.getFirstName() + " tiene el Rol " + role.getName();
     }
 
+
     // Asigna una membresía a un usuario
     public String addMember(AddMemberDTO addMemberDTO) {
 
@@ -126,6 +135,7 @@ public class UsrService {
         return "Usuario: " + usr.getFirstName() + " tiene la Membresía " + memberType.getName();
     }
 
+
     public String payMembership(PayMembershipDTO dto) {
         Usr user = usrRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -140,7 +150,7 @@ public class UsrService {
 
 
     // Inscribe al usuario autenticado en una clase
-    @Transactional
+    @Transactional //Para que no se pisen los cupos
     public String joinClass(Long userId, Long classId) {
 
         Usr usr = usrRepository.findById(userId)
@@ -174,10 +184,9 @@ public class UsrService {
         usrRepository.save(usr);
         clsRepository.save(cls);
 
-        // todo OK → devolvemos null
+        //Si devuelve null, esta OK
         return null;
     }
-
 
 
     // Modifica los datos del usuario autenticado
@@ -212,7 +221,7 @@ public class UsrService {
     }
 
 
-    // Elimina un usuario (solo administrador)
+    // Elimina un usuario
     public String deleteUser(Long id) {
 
         Usr usrById = usrRepository.findById(id)
@@ -221,6 +230,7 @@ public class UsrService {
         usrRepository.delete(usrById);
         return "Eliminado correctamente";
     }
+
 
     // Da de baja al usuario autenticado de una clase
     public String leaveClass(Long userId, Long classId) {
@@ -243,6 +253,7 @@ public class UsrService {
 
         return "Te has dado de baja de la clase: " + cls.getName();
     }
+
 
     // Mapea usuario a DTO
     private GetUsrDTO mapUsrToGetUsrDTO(Usr usr) {

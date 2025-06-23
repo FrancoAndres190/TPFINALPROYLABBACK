@@ -37,9 +37,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     request.getReader(),
                     AuthCredentials.class);
 
-            System.out.println(" Email: " + authCredentials.getEmail());
-            System.out.println(" Password: " + authCredentials.getPassword());
-
         }catch (IOException e) {
             System.out.println("Error al leer authCredential - attemptAuthentication");
         }
