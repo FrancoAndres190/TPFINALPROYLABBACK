@@ -27,7 +27,7 @@ public class TokenUtils {
 
 
     //Metodo qe genera el token
-    public String createToken(Long userID, String nombre, String email, Set<GrantedAuthority> authorities){
+    public String createToken(Long userID, String nombre, String email, boolean membershipActive, Set<GrantedAuthority> authorities){
 
         //Duraciond del token
         Date expirationDate = new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_MILISECONDS);
@@ -36,6 +36,7 @@ public class TokenUtils {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userID", userID);
         claims.put("nombre", nombre);
+        claims.put("membershipActive", membershipActive);
         claims.put("roles", authorities.stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
 

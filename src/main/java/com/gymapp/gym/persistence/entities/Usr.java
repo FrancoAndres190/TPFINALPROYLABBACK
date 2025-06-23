@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -44,15 +45,14 @@ public class Usr {
     @OneToMany(mappedBy = "coach")
     private Set<Cls> clasesCreadas;
 
-    /* @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
-
-     */
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_type_id")
     private MemberType memberType;
+
+    private LocalDate membershipPaidUntil;
+
+    private boolean membershipActive;
+
 
     @Override
     public boolean equals(Object o) {

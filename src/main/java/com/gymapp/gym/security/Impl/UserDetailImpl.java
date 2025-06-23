@@ -32,6 +32,9 @@ public class UserDetailImpl implements UserDetails {
         return usr.getEmail();
     }
 
+    public boolean isMembershipActive(){return  usr.isMembershipActive();}
+
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

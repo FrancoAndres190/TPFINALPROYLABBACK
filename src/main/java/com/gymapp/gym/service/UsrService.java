@@ -126,6 +126,19 @@ public class UsrService {
         return "Usuario: " + usr.getFirstName() + " tiene la Membresía " + memberType.getName();
     }
 
+    public String payMembership(PayMembershipDTO dto) {
+        Usr user = usrRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        user.setMembershipPaidUntil(dto.getMembershipPaidUntil());
+        user.setMembershipActive(true);
+
+        usrRepository.save(user);
+
+        return "Pago registrado correctamente";
+    }
+
+
     // Inscribe al usuario autenticado en una clase
     @Transactional
     public String joinClass(Long userId, Long classId) {

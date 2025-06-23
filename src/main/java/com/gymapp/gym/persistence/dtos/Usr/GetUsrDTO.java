@@ -5,6 +5,7 @@ import com.gymapp.gym.persistence.entities.MemberType;
 import com.gymapp.gym.persistence.entities.Role;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -18,5 +19,7 @@ public class GetUsrDTO {
     private String dni;
     private Set<Role> roles;
     private MemberType memberType;
+    private LocalDate membershipPaidUntil;
+    private boolean membershipActive;
 
 }

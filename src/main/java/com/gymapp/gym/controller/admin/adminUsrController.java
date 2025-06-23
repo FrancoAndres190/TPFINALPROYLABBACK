@@ -1,8 +1,5 @@
 package com.gymapp.gym.controller.admin;
-import com.gymapp.gym.persistence.dtos.Usr.AddRoleDTO;
-import com.gymapp.gym.persistence.dtos.Usr.AddMemberDTO;
-import com.gymapp.gym.persistence.dtos.Usr.EditUsrDTO;
-import com.gymapp.gym.persistence.dtos.Usr.GetUsrDTO;
+import com.gymapp.gym.persistence.dtos.Usr.*;
 import com.gymapp.gym.persistence.entities.Role;
 import com.gymapp.gym.service.RolService;
 import com.gymapp.gym.service.UsrService;
@@ -24,11 +21,6 @@ public class adminUsrController {
     @Autowired
     RolService rolService;
 
-    /*AGREGAR:
-
-        GET ALL ROLES /ADMIN/USERS/ROLES
-
-    */
 
 //-------INICIO-GET-------------------------------------------------
 
@@ -70,6 +62,13 @@ public class adminUsrController {
         return ResponseEntity.ok(usrService.addMember(addMemberDTO));
 
     }
+
+    // Metodo para registrar un pago de mensualidad
+    @PostMapping("/pay")
+    public ResponseEntity<String> payMembership(@RequestBody PayMembershipDTO payMembershipDTO) {
+        return ResponseEntity.ok(usrService.payMembership(payMembershipDTO));
+    }
+
 
 //-------INICIO-DELETE-------------------------------------------------
 
