@@ -93,10 +93,11 @@ public class UsrService {
         }
 
         Usr usrCreate = modelMapper.map(createUsrDto, Usr.class);
-        usrCreate.setPassword(new BCryptPasswordEncoder().encode(createUsrDto.getPassword()));
+        //Encriptamos en el setter
+        //usrCreate.setPassword(new BCryptPasswordEncoder().encode(createUsrDto.getPassword()));
 
         usrRepository.save(usrCreate);
-        return "Creado correctamente";
+        return null;
     }
 
 
