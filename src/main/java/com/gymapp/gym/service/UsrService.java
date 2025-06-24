@@ -96,6 +96,11 @@ public class UsrService {
         //Encriptamos en el setter
         //usrCreate.setPassword(new BCryptPasswordEncoder().encode(createUsrDto.getPassword()));
 
+        Role userRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new NotFoundException("Error de roles."));
+
+        usrCreate.getRoles().add(userRole);
+
         usrRepository.save(usrCreate);
         return null;
     }
