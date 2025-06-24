@@ -47,6 +47,10 @@ public class ClsService {
         cls.getUsers().remove(usr);
         usr.getClasses().remove(cls);
 
+        if (cls.getUsers().size() < cls.getMaxCapacity()) {
+            cls.setDispo(true);
+        }
+
         clsRepository.save(cls);
         usrRepository.save(usr);
 

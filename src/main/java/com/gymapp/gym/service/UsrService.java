@@ -254,6 +254,10 @@ public class UsrService {
         usr.getClasses().remove(cls);
         cls.getUsers().remove(usr);
 
+        if (cls.getUsers().size() < cls.getMaxCapacity()) {
+            cls.setDispo(true);
+        }
+
         usrRepository.save(usr);
         clsRepository.save(cls);
 
